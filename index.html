@@ -14,7 +14,7 @@
 
 <header class="wrap top">
   <a class="logo" href="/">
-    <svg class="sprout" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 30V15" stroke="#2B2235" stroke-width="2.5" stroke-linecap="round"/><path d="M16 16C16 9 11 5 4 5c0 7 5 11 12 11Z" fill="#7ED6B8" stroke="#2B2235" stroke-width="2.2"/><path d="M16 13c0-5 4-9 11-9 0 6-4 9-11 9Z" fill="#FFC93C" stroke="#2B2235" stroke-width="2.2"/></svg>
+    <svg class="sprout" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 30V15" stroke="#4A3B5C" stroke-width="2.5" stroke-linecap="round"/><path d="M16 16C16 9 11 5 4 5c0 7 5 11 12 11Z" fill="#B8F0DC" stroke="#4A3B5C" stroke-width="2.2"/><path d="M16 13c0-5 4-9 11-9 0 6-4 9-11 9Z" fill="#FFE79A" stroke="#4A3B5C" stroke-width="2.2"/></svg>
     새싹 공방
   </a>
   <nav>
@@ -26,7 +26,7 @@
 
 <main>
   <!-- 1. 첫 화면 -->
-  <section class="hero">
+  <section class="hero" data-sparkles="8%,18%,26,#FFD86B,0;46%,8%,16,#FFB3D1,.6;92%,70%,24,#C9B6FF,1.2;6%,82%,18,#9FDCF8,.4;55%,90%,14,#FFD86B,1.6">
     <div class="wrap hero-grid">
       <div>
         <span class="eyebrow">데이트 · 친구 모임 원데이 클래스</span>
@@ -42,12 +42,12 @@
       <div class="hero-art" aria-hidden="true">
         <div class="blob a"></div><div class="blob b"></div><div class="blob c"></div>
         <svg class="candle" viewBox="0 0 120 160">
-          <path d="M60 8c10 14 12 24 0 34-12-10-10-20 0-34Z" fill="#FF6B4A" stroke="#2B2235" stroke-width="3"/>
-          <path d="M60 22c4 6 5 11 0 15-5-4-4-9 0-15Z" fill="#FFC93C"/>
-          <line x1="60" y1="42" x2="60" y2="58" stroke="#2B2235" stroke-width="3"/>
-          <rect x="22" y="56" width="76" height="96" rx="14" fill="#FFF8EC" stroke="#2B2235" stroke-width="3"/>
-          <rect x="22" y="84" width="76" height="28" fill="#B9A6FF" stroke="#2B2235" stroke-width="3"/>
-          <circle cx="46" cy="98" r="4" fill="#2B2235"/><circle cx="74" cy="98" r="4" fill="#2B2235"/>
+          <path d="M60 8c10 14 12 24 0 34-12-10-10-20 0-34Z" fill="#FF9EC4" stroke="#4A3B5C" stroke-width="3"/>
+          <path d="M60 22c4 6 5 11 0 15-5-4-4-9 0-15Z" fill="#FFE79A"/>
+          <line x1="60" y1="42" x2="60" y2="58" stroke="#4A3B5C" stroke-width="3"/>
+          <rect x="22" y="56" width="76" height="96" rx="14" fill="#FFFFFF" stroke="#4A3B5C" stroke-width="3"/>
+          <rect x="22" y="84" width="76" height="28" fill="#D9C8FF" stroke="#4A3B5C" stroke-width="3"/>
+          <circle cx="46" cy="98" r="4" fill="#4A3B5C"/><circle cx="74" cy="98" r="4" fill="#4A3B5C"/>
         </svg>
       </div>
     </div>
@@ -82,7 +82,7 @@
   </section>
 
   <!-- 3. 가격·시간 -->
-  <section class="price">
+  <section class="price" data-sparkles="4%,25%,22,#FFFFFF,0;95%,30%,18,#FFFFFF,.8;50%,85%,14,#FFFFFF,1.4">
     <div class="wrap facts">
       <div class="fact"><div class="k">가격</div><div class="v">2인 5만원</div></div>
       <div class="fact"><div class="k">수업 시간</div><div class="v">2시간</div></div>
@@ -101,7 +101,7 @@
   </section>
 
   <!-- 5. 예약 -->
-  <section class="book" id="book">
+  <section class="book" id="book" data-sparkles="5%,12%,24,#FFD86B,0;94%,8%,18,#FFB3D1,.7;90%,92%,22,#C9B6FF,1.3">
     <div class="wrap">
       <h2 class="sec-title">예약 신청하기</h2>
       <p class="sec-sub">남은 자리가 있는 시간을 고르면 바로 예약이 확정돼요.</p>
@@ -177,6 +177,17 @@ else { insta.textContent = '인스타그램 주소 준비 중'; insta.removeAttr
 document.querySelectorAll('[data-photo]').forEach((el) => {
   const src = SITE.photos[el.dataset.photo];
   if (src) { el.textContent = ''; const img = new Image(); img.src = src; img.alt = el.dataset.photo === 'candle' ? '새싹 공방에서 만든 향초' : '새싹 공방에서 만든 디퓨저'; el.appendChild(img); }
+});
+
+// 별·반짝이 장식 — data-sparkles="왼쪽,위,크기,색,늦게시작;..."
+const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0c1 6.5 5.5 11 12 12-6.5 1-11 5.5-12 12-1-6.5-5.5-11-12-12C6.5 11 11 6.5 12 0Z"/></svg>';
+document.querySelectorAll('[data-sparkles]').forEach((sec) => {
+  sec.dataset.sparkles.split(';').forEach((p) => {
+    const [x, y, s, c, d] = p.split(',');
+    const el = document.createElement('span'); el.className = 'sparkle'; el.innerHTML = STAR;
+    el.style.cssText = `left:${x};top:${y};--s:${s}px;--c:${c};--d:${d}s`;
+    sec.prepend(el);
+  });
 });
 
 // 유리 카드 겹치기 — 뒤 카드나 위 버튼을 누르면 앞으로
