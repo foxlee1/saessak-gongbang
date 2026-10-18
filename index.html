@@ -58,17 +58,25 @@
     <div class="wrap">
       <h2 class="sec-title">이런 걸 만들어요</h2>
       <p class="sec-sub">둘이 함께 향을 고르고, 하나씩 직접 만들어요.</p>
-      <div class="make">
-        <article class="card">
-          <div class="photo" data-photo="candle">향초 사진 자리</div>
-          <h3>🕯️ 향초</h3>
-          <p>좋아하는 향을 골라 나만의 향초를 만들어요.</p>
-        </article>
-        <article class="card">
-          <div class="photo" data-photo="diffuser">디퓨저 사진 자리</div>
-          <h3>🌿 디퓨저</h3>
-          <p>방에 두고 오래 즐길 디퓨저를 만들어요.</p>
-        </article>
+      <div class="glass-wrap">
+        <div class="glass-tabs" role="tablist" aria-label="만드는 것 고르기">
+          <button type="button" role="tab" data-card="0" aria-selected="true">🕯️ 향초</button>
+          <button type="button" role="tab" data-card="1" aria-selected="false">🌿 디퓨저</button>
+        </div>
+        <div class="glass-stage" id="glassStage">
+          <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><span class="orb o4"></span>
+          <article class="glass is-front" data-i="0" role="tabpanel" aria-label="향초">
+            <div class="photo" data-photo="candle">향초 사진 자리</div>
+            <h3>🕯️ 향초</h3>
+            <p>좋아하는 향을 골라 나만의 향초를 만들어요.</p>
+          </article>
+          <article class="glass is-back" data-i="1" role="tabpanel" aria-label="디퓨저">
+            <div class="photo" data-photo="diffuser">디퓨저 사진 자리</div>
+            <h3>🌿 디퓨저</h3>
+            <p>방에 두고 오래 즐길 디퓨저를 만들어요.</p>
+          </article>
+        </div>
+        <p class="glass-hint">뒤에 있는 카드를 누르면 앞으로 와요</p>
       </div>
     </div>
   </section>
@@ -170,6 +178,17 @@ document.querySelectorAll('[data-photo]').forEach((el) => {
   const src = SITE.photos[el.dataset.photo];
   if (src) { el.textContent = ''; const img = new Image(); img.src = src; img.alt = el.dataset.photo === 'candle' ? '새싹 공방에서 만든 향초' : '새싹 공방에서 만든 디퓨저'; el.appendChild(img); }
 });
+
+// 유리 카드 겹치기 — 뒤 카드나 위 버튼을 누르면 앞으로
+const glassCards = [...document.querySelectorAll('.glass')];
+const glassTabs = [...document.querySelectorAll('.glass-tabs button')];
+function showGlass(i) {
+  glassCards.forEach((c) => { const on = Number(c.dataset.i) === i; c.classList.toggle('is-front', on); c.classList.toggle('is-back', !on); c.setAttribute('aria-hidden', on ? 'false' : 'true'); });
+  glassTabs.forEach((t) => t.setAttribute('aria-selected', Number(t.dataset.card) === i ? 'true' : 'false'));
+}
+glassCards.forEach((c) => c.addEventListener('click', () => { if (c.classList.contains('is-back')) showGlass(Number(c.dataset.i)); }));
+glassTabs.forEach((t) => t.addEventListener('click', () => showGlass(Number(t.dataset.card))));
+showGlass(0);
 
 // 후기
 const list = document.getElementById('reviewList');

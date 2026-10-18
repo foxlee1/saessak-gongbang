@@ -84,6 +84,38 @@ section { padding: 64px 0; }
 .make .card:nth-child(1) .photo { background: #FFE9D6; }
 .make .card:nth-child(2) .photo { background: #E4F7F0; }
 
+/* 유리 카드 겹치기 */
+#make { overflow: hidden; }
+.glass-wrap { display: flex; flex-direction: column; align-items: center; }
+.glass-tabs { display: inline-flex; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(255,255,255,.55); border: 2px solid var(--line); margin-bottom: 28px; }
+.glass-tabs button { min-height: 44px; padding: 0 20px; border-radius: 999px; border: 0; background: transparent; font-family: 'Jua', sans-serif; font-size: 18px; color: var(--ink); cursor: pointer; }
+.glass-tabs button[aria-selected="true"] { background: var(--ink); color: #fff; }
+.glass-stage { position: relative; width: min(100%, 440px); height: 500px; }
+.orb { position: absolute; border-radius: 50%; filter: blur(2px); }
+.orb.o1 { width: 210px; height: 210px; background: var(--coral); left: -40px; top: 40px; }
+.orb.o2 { width: 170px; height: 170px; background: var(--sunny); right: -30px; top: -10px; }
+.orb.o3 { width: 190px; height: 190px; background: var(--mint); right: -20px; bottom: 10px; }
+.orb.o4 { width: 120px; height: 120px; background: var(--lilac); left: 10px; bottom: -10px; }
+.glass {
+  position: absolute; left: 0; right: 0; top: 30px; margin: 0 auto; width: 86%;
+  padding: 18px 18px 22px; border-radius: 28px;
+  background: linear-gradient(145deg, rgba(255,255,255,.62), rgba(255,255,255,.28));
+  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
+  border: 1.5px solid rgba(255,255,255,.85);
+  box-shadow: 0 20px 50px rgba(43,34,53,.18), inset 0 1px 0 rgba(255,255,255,.9);
+  transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .4s, filter .4s;
+}
+.glass::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(120deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 38%); }
+.glass .photo { border-style: solid; border-color: rgba(255,255,255,.9); background: rgba(255,255,255,.45); }
+.glass h3 { font-size: 28px; margin: 14px 0 4px; }
+.glass p { margin: 0; color: var(--ink); }
+.glass.is-front { z-index: 2; transform: rotate(-3deg); }
+.glass.is-back { z-index: 1; transform: translate(26px, -26px) rotate(5deg) scale(.92); opacity: .78; filter: saturate(.8); cursor: pointer; }
+.glass.is-back:hover { transform: translate(34px, -36px) rotate(7deg) scale(.93); opacity: .9; }
+.glass-hint { margin: 10px 0 0; font-size: 15px; color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) { .glass { transition: none; } }
+
 /* 가격·시간 */
 .price { background: var(--sunny); border-top: 2.5px solid var(--line); border-bottom: 2.5px solid var(--line); }
 .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
