@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>새싹 공방 · 향초·디퓨저 원데이 클래스</title>
+<meta name="description" content="성수동 새싹 공방. 데이트·친구 모임으로 함께 향초와 디퓨저를 만드는 2시간 원데이 클래스. 2인 5만원.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="/">
+    <svg class="sprout" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 30V15" stroke="#2B2235" stroke-width="2.5" stroke-linecap="round"/><path d="M16 16C16 9 11 5 4 5c0 7 5 11 12 11Z" fill="#7ED6B8" stroke="#2B2235" stroke-width="2.2"/><path d="M16 13c0-5 4-9 11-9 0 6-4 9-11 9Z" fill="#FFC93C" stroke="#2B2235" stroke-width="2.2"/></svg>
+    새싹 공방
+  </a>
+  <nav>
+    <a href="#make">수업</a>
+    <a href="#book">예약</a>
+    <a href="/login.html" id="navLogin">로그인</a>
+  </nav>
+</header>
+
+<main>
+  <!-- 1. 첫 화면 -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">데이트 · 친구 모임 원데이 클래스</span>
+        <h1>둘이서 2시간,<br><em>향기로 남는</em> 하루</h1>
+        <p class="lead">성수동 새싹 공방에서 함께 향초와 디퓨저를 만들어요.</p>
+        <ul class="chips">
+          <li><b>2인 5만원</b></li>
+          <li><b>2시간</b></li>
+          <li><b>성수동</b></li>
+        </ul>
+        <a class="btn wide-m" href="#book">예약 신청하기 →</a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="blob a"></div><div class="blob b"></div><div class="blob c"></div>
+        <svg class="candle" viewBox="0 0 120 160">
+          <path d="M60 8c10 14 12 24 0 34-12-10-10-20 0-34Z" fill="#FF6B4A" stroke="#2B2235" stroke-width="3"/>
+          <path d="M60 22c4 6 5 11 0 15-5-4-4-9 0-15Z" fill="#FFC93C"/>
+          <line x1="60" y1="42" x2="60" y2="58" stroke="#2B2235" stroke-width="3"/>
+          <rect x="22" y="56" width="76" height="96" rx="14" fill="#FFF8EC" stroke="#2B2235" stroke-width="3"/>
+          <rect x="22" y="84" width="76" height="28" fill="#B9A6FF" stroke="#2B2235" stroke-width="3"/>
+          <circle cx="46" cy="98" r="4" fill="#2B2235"/><circle cx="74" cy="98" r="4" fill="#2B2235"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 만드는 것 -->
+  <section id="make">
+    <div class="wrap">
+      <h2 class="sec-title">이런 걸 만들어요</h2>
+      <p class="sec-sub">둘이 함께 향을 고르고, 하나씩 직접 만들어요.</p>
+      <div class="make">
+        <article class="card">
+          <div class="photo" data-photo="candle">향초 사진 자리</div>
+          <h3>🕯️ 향초</h3>
+          <p>좋아하는 향을 골라 나만의 향초를 만들어요.</p>
+        </article>
+        <article class="card">
+          <div class="photo" data-photo="diffuser">디퓨저 사진 자리</div>
+          <h3>🌿 디퓨저</h3>
+          <p>방에 두고 오래 즐길 디퓨저를 만들어요.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 가격·시간 -->
+  <section class="price">
+    <div class="wrap facts">
+      <div class="fact"><div class="k">가격</div><div class="v">2인 5만원</div></div>
+      <div class="fact"><div class="k">수업 시간</div><div class="v">2시간</div></div>
+      <div class="fact"><div class="k">장소</div><div class="v">성수동</div><div class="n">자세한 주소는 예약 확정 때 안내드려요</div></div>
+    </div>
+  </section>
+
+  <!-- 4. 후기 -->
+  <section id="reviews">
+    <div class="wrap">
+      <h2 class="sec-title">다녀간 손님 이야기</h2>
+      <p class="sec-sub">실제 손님이 남긴 후기예요.</p>
+      <div class="reviews" id="reviewList"></div>
+      <p style="margin-top:22px"><a class="btn ghost small" id="instaLink" href="#" target="_blank" rel="noopener">인스타그램에서 수업 사진 보기</a></p>
+    </div>
+  </section>
+
+  <!-- 5. 예약 -->
+  <section class="book" id="book">
+    <div class="wrap">
+      <h2 class="sec-title">예약 신청하기</h2>
+      <p class="sec-sub">남은 자리가 있는 시간을 고르면 바로 예약이 확정돼요.</p>
+      <div class="book-grid">
+        <div class="card">
+          <p class="step"><span>1</span>날짜와 시간</p>
+          <div id="slotLoading">수업 시간을 불러오고 있어요…</div>
+          <div id="slotEmpty" hidden>지금은 열린 수업 시간이 없어요. 인스타그램 DM으로 문의해 주세요.</div>
+          <div class="days" id="days" role="group" aria-label="날짜 고르기"></div>
+          <div class="times" id="times" role="group" aria-label="시간 고르기"></div>
+          <p class="picked" id="picked" hidden></p>
+        </div>
+
+        <form class="card" id="bookForm" novalidate>
+          <p class="step"><span>2</span>예약하는 분</p>
+          <div class="field">
+            <label class="lbl" for="name">이름</label>
+            <input type="text" id="name" name="name" maxlength="50" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label class="lbl" for="contact">연락처</label>
+            <input type="text" id="contact" name="contact" maxlength="100" placeholder="전화번호 또는 이메일" autocomplete="tel" required>
+          </div>
+          <div class="field">
+            <span class="lbl">만들고 싶은 것</span>
+            <div class="choices">
+              <label><input type="radio" name="item" value="향초"><span>🕯️ 향초</span></label>
+              <label><input type="radio" name="item" value="디퓨저"><span>🌿 디퓨저</span></label>
+              <label><input type="radio" name="item" value="아직 고민 중" checked><span>아직 고민 중</span></label>
+            </div>
+          </div>
+          <div class="trap" aria-hidden="true">
+            <label for="website">웹사이트</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="field">
+            <label class="consent">
+              <input type="checkbox" id="consent">
+              <span>(필수) 예약 확인과 연락을 위해 이름·연락처를 받고, 수업이 끝나고 1년 뒤 지워요. <a href="/privacy.html">개인정보 처리방침</a></span>
+            </label>
+          </div>
+          <button class="btn wide-m" type="submit" id="submitBtn">예약 신청하기</button>
+          <div class="msg" id="formMsg" hidden role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>새싹 공방 · 성수동 · 문의는 인스타그램 DM</span>
+    <span><a href="/privacy.html">개인정보 처리방침</a></span>
+  </div>
+</footer>
+
+<script>
+// ▼ 사장님이 채울 곳 — 실제 내용만 넣어요 (지어내지 않기)
+const SITE = {
+  instagram: '',          // 예: 'https://instagram.com/공방아이디'
+  photos: { candle: '', diffuser: '' },   // 예: '/images/candle.jpg'
+  reviews: [
+    // { text: '손님이 남긴 후기 원문', who: '인스타 DM · 2026년 10월' },
+  ],
+};
+
+// 인스타 링크
+const insta = document.getElementById('instaLink');
+if (SITE.instagram) insta.href = SITE.instagram;
+else { insta.textContent = '인스타그램 주소 준비 중'; insta.removeAttribute('href'); insta.style.opacity = .6; }
+
+// 사진
+document.querySelectorAll('[data-photo]').forEach((el) => {
+  const src = SITE.photos[el.dataset.photo];
+  if (src) { el.textContent = ''; const img = new Image(); img.src = src; img.alt = el.dataset.photo === 'candle' ? '새싹 공방에서 만든 향초' : '새싹 공방에서 만든 디퓨저'; el.appendChild(img); }
+});
+
+// 후기
+const list = document.getElementById('reviewList');
+if (SITE.reviews.length) {
+  SITE.reviews.forEach((r) => {
+    const a = document.createElement('article'); a.className = 'card review';
+    const p = document.createElement('p'); p.textContent = '“' + r.text + '”';
+    const w = document.createElement('div'); w.className = 'who'; w.textContent = r.who || '';
+    a.append(p, w); list.appendChild(a);
+  });
+} else {
+  list.innerHTML = '<div class="empty" style="grid-column:1/-1">손님 후기를 정리하고 있어요. 곧 여기에 올릴게요.</div>';
+}
+
+// 로그인 상태면 메뉴 바꾸기
+try { if (sessionStorage.getItem('sb_token')) { const n = document.getElementById('navLogin'); n.textContent = '내 공간'; n.href = '/members.html'; } } catch {}
+
+// ── 예약 달력 ──
+const TZ = 'Asia/Seoul';
+const fmtDay = new Intl.DateTimeFormat('ko-KR', { timeZone: TZ, month: 'numeric', day: 'numeric', weekday: 'short' });
+const fmtKey = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+const fmtTime = new Intl.DateTimeFormat('ko-KR', { timeZone: TZ, hour: 'numeric', minute: '2-digit' });
+const fmtFull = new Intl.DateTimeFormat('ko-KR', { timeZone: TZ, month: 'long', day: 'numeric', weekday: 'short', hour: 'numeric', minute: '2-digit' });
+let groups = new Map(); let chosen = null;
+
+async function loadSlots() {
+  const loading = document.getElementById('slotLoading'), empty = document.getElementById('slotEmpty');
+  try {
+    const r = await fetch('/api/slots', { cache: 'no-store' });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || '');
+    groups = new Map();
+    (d.slots || []).forEach((s) => {
+      const k = fmtKey.format(new Date(s.starts_at));
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(s);
+    });
+    loading.hidden = true;
+    if (!groups.size) { empty.hidden = false; return; }
+    empty.hidden = true; renderDays();
+  } catch (e) {
+    loading.textContent = '수업 시간을 불러오지 못했어요. 잠시 뒤 다시 들어와 주시거나 인스타그램 DM으로 문의해 주세요.';
+  }
+}
+
+function renderDays(activeKey) {
+  const days = document.getElementById('days'); days.innerHTML = '';
+  const keys = [...groups.keys()];
+  const active = activeKey && groups.has(activeKey) ? activeKey : keys.find((k) => groups.get(k).some((s) => s.remaining > 0)) || keys[0];
+  keys.forEach((k) => {
+    const first = new Date(groups.get(k)[0].starts_at);
+    const parts = fmtDay.formatToParts(first);
+    const md = parts.filter((p) => p.type === 'month' || p.type === 'day').map((p) => p.value).join('/');
+    const wd = parts.find((p) => p.type === 'weekday').value;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'day';
+    b.setAttribute('aria-pressed', k === active ? 'true' : 'false');
+    b.innerHTML = `${wd}<b>${md}</b>`;
+    b.onclick = () => renderDays(k);
+    days.appendChild(b);
+  });
+  renderTimes(active);
+}
+
+function renderTimes(key) {
+  const times = document.getElementById('times'); times.innerHTML = '';
+  groups.get(key).forEach((s) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'time';
+    const full = s.remaining <= 0;
+    b.disabled = full;
+    b.setAttribute('aria-pressed', chosen && chosen.id === s.id ? 'true' : 'false');
+    b.innerHTML = `${fmtTime.format(new Date(s.starts_at))}<small>${full ? '마감' : '남은 자리 ' + s.remaining + '팀'}</small>`;
+    if (full) b.style.opacity = .45;
+    b.onclick = () => { chosen = s; renderTimes(key); showPicked(); };
+    times.appendChild(b);
+  });
+}
+
+function showPicked() {
+  const p = document.getElementById('picked');
+  p.hidden = !chosen;
+  if (chosen) p.innerHTML = `고른 시간: <b>${fmtFull.format(new Date(chosen.starts_at))}</b>`;
+}
+
+// ── 예약 신청 ──
+const form = document.getElementById('bookForm');
+const msg = document.getElementById('formMsg');
+function say(text, ok) { msg.hidden = false; msg.className = 'msg ' + (ok ? 'ok' : 'err'); msg.textContent = text; }
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = form.name.value.trim(), contact = form.contact.value.trim();
+  const consent = document.getElementById('consent').checked;
+  if (!chosen) return say('먼저 왼쪽에서 날짜와 시간을 골라 주세요.');
+  if (!name || !contact) return say('이름과 연락처를 적어 주세요.');
+  if (!consent) return say('개인정보 수집·이용에 동의해 주세요.');
+  const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.textContent = '보내는 중…';
+  try {
+    const r = await fetch('/api/inquiry', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slot_id: chosen.id, name, contact, message: form.item.value, consent, website: form.website.value }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      say(d.error || '보내지 못했어요. 잠시 뒤 다시 시도해 주세요.');
+      if (r.status === 409) { chosen = null; showPicked(); loadSlots(); }
+      return;
+    }
+    const when = d.starts_at ? fmtFull.format(new Date(d.starts_at)) : '';
+    say(`예약이 확정됐어요! ${when} 에 만나요. 자세한 안내는 남겨 주신 연락처로 드릴게요.`, true);
+    form.reset(); chosen = null; showPicked(); loadSlots();
+  } catch {
+    say('보내지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.');
+  } finally {
+    btn.disabled = false; btn.textContent = '예약 신청하기';
+  }
+});
+
+loadSlots();
+</script>
+</body>
+</html>

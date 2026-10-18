@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>로그인 · 새싹 공방</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="wrap top"><a class="logo" href="/">🌱 새싹 공방</a></header>
+<main class="wrap">
+  <form class="card narrow" id="f" novalidate>
+    <h1>로그인</h1>
+    <p class="sec-sub" style="margin-bottom:20px">반가워요! 다시 오셨네요.</p>
+    <div class="field"><label class="lbl" for="email">이메일</label><input type="email" id="email" autocomplete="email" required></div>
+    <div class="field"><label class="lbl" for="pw">비밀번호</label><input type="password" id="pw" autocomplete="current-password" required></div>
+    <button class="btn" style="width:100%" type="submit" id="btn">로그인</button>
+    <div class="msg" id="m" hidden role="status"></div>
+    <div class="links">
+      <a href="/signup.html">처음이에요 → 회원가입</a>
+      <a href="#" id="forgot">비밀번호를 잊었어요</a>
+    </div>
+  </form>
+</main>
+<script src="auth.js"></script>
+<script>
+document.getElementById('f').onsubmit = async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim(), password = document.getElementById('pw').value;
+  if (!email || !password) return say('m', '이메일과 비밀번호를 적어 주세요.');
+  const btn = document.getElementById('btn'); btn.disabled = true;
+  try {
+    const r = await Auth.call('token?grant_type=password', { email, password });
+    if (!r.ok || !r.data.access_token) {
+      const unconfirmed = /confirm/i.test(r.data.error_code || r.data.msg || r.data.error_description || '');
+      return say('m', unconfirmed ? '가입 확인 메일의 링크를 먼저 눌러 주세요.' : '이메일 또는 비밀번호가 맞지 않아요.');
+    }
+    Auth.save(r.data.access_token); location.href = '/members.html';
+  } catch (err) { say('m', err.message); }
+  finally { btn.disabled = false; }
+};
+document.getElementById('forgot').onclick = async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if (!email) return say('m', '위 칸에 이메일을 먼저 적어 주세요.');
+  try { await Auth.call('recover', { email }); } catch {}
+  say('m', '메일을 확인해 주세요. 가입된 이메일이면 비밀번호 바꾸는 링크가 가요.', true);
+};
+</script>
+</body>
+</html>

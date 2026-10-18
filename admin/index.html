@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>새싹 공방 관리</title>
+<style>
+  :root { --ink:#2B2235; --soft:#6B6175; --line:#D9D2C6; --bg:#FFF8EC; --coral:#FF6B4A; --sunny:#FFC93C; --mint:#7ED6B8; --red:#D93A25; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, 'Noto Sans KR', sans-serif; word-break: keep-all; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 22px; margin: 6px 0 16px; }
+  button, input { font: inherit; }
+  input { width: 100%; min-height: 48px; padding: 10px 14px; border: 1.5px solid var(--ink); border-radius: 12px; background: #fff; color: var(--ink); }
+  .btn { min-height: 46px; padding: 0 18px; border-radius: 12px; border: 1.5px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+  .btn.main { background: var(--coral); color: #fff; border-color: var(--coral); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+  .tabs button { flex: 1; min-height: 46px; border-radius: 12px; border: 1.5px solid var(--ink); background: #fff; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--ink); color: #fff; }
+  .big { display: flex; gap: 10px; margin-bottom: 14px; }
+  .big div { flex: 1; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+  .big b { display: block; font-size: 30px; line-height: 1.2; }
+  .big .late b { color: var(--red); }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .filters button { min-height: 38px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; }
+  .filters button[aria-pressed="true"] { border-color: var(--ink); background: var(--sunny); }
+  .card { background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+  .card.late { border: 2px solid var(--red); }
+  .card .when { font-weight: 700; font-size: 17px; }
+  .card .meta { color: var(--soft); font-size: 14px; }
+  .card .contact { background: none; border: 0; padding: 0; color: #2457C5; text-decoration: underline; cursor: pointer; font-size: 17px; }
+  .status { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .status button { flex: 1; min-height: 44px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; }
+  .status button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .tag { display: inline-block; font-size: 13px; padding: 1px 8px; border-radius: 999px; background: var(--mint); margin-left: 6px; }
+  .tag.off { background: #eee; color: var(--soft); }
+  .note { color: var(--soft); font-size: 14px; }
+  .err { color: var(--red); }
+  .link { background: none; border: 0; color: var(--soft); text-decoration: underline; cursor: pointer; padding: 6px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🌱 새싹 공방 관리</h1>
+
+  <!-- 로그인 -->
+  <form id="loginBox">
+    <label for="pw">관리자 비밀번호</label>
+    <div class="row" style="margin-top:6px">
+      <input type="password" id="pw" autocomplete="current-password" style="flex:1">
+      <button class="btn main" type="submit">들어가기</button>
+    </div>
+    <p class="err" id="loginErr" hidden></p>
+  </form>
+
+  <div id="app" hidden>
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="inq" aria-selected="true">예약함</button>
+      <button role="tab" data-tab="slots" aria-selected="false">수업 시간</button>
+      <button role="tab" data-tab="members" aria-selected="false">회원</button>
+    </div>
+    <p class="err" id="appErr" hidden></p>
+
+    <!-- 예약함 -->
+    <div id="tab-inq">
+      <div class="big">
+        <div>새 예약<b id="newCount">0</b></div>
+        <div class="late">답장 늦은 예약<b id="lateCount">0</b><span class="note">48시간 넘게 '새 문의'</span></div>
+      </div>
+      <div class="filters" id="filters">
+        <button data-f="새 문의" aria-pressed="true">새 문의</button>
+        <button data-f="연락함" aria-pressed="false">연락함</button>
+        <button data-f="완료" aria-pressed="false">완료</button>
+        <button data-f="" aria-pressed="false">전체</button>
+      </div>
+      <div id="inqList"></div>
+    </div>
+
+    <!-- 수업 시간 -->
+    <div id="tab-slots" hidden>
+      <form class="card" id="slotForm">
+        <b>수업 시간 열기</b>
+        <p class="note" style="margin:4px 0 10px">손님은 여기서 연 시간만 고를 수 있어요. 남은 자리가 있으면 바로 확정돼요.</p>
+        <label for="slotAt">날짜·시간 (한국 시간)</label>
+        <input type="datetime-local" id="slotAt" required>
+        <label for="slotCap" style="display:block;margin-top:10px">받을 팀 수 (2인 1팀)</label>
+        <input type="number" id="slotCap" min="1" max="50" required placeholder="예: 3">
+        <button class="btn main" type="submit" style="margin-top:12px;width:100%">이 시간 열기</button>
+      </form>
+      <div id="slotList"></div>
+    </div>
+
+    <!-- 회원 -->
+    <div id="tab-members" hidden>
+      <div class="big"><div>회원 수<b id="memCount">0</b></div></div>
+      <div id="memList"></div>
+      <p class="note">회원 삭제·비밀번호 변경은 Supabase 화면(Authentication → Users)에서 해 주세요.</p>
+    </div>
+
+    <button class="link" id="logout">로그아웃</button>
+  </div>
+</div>
+
+<script>
+const TZ = 'Asia/Seoul';
+const fmt = new Intl.DateTimeFormat('ko-KR', { timeZone: TZ, month: 'numeric', day: 'numeric', weekday: 'short', hour: 'numeric', minute: '2-digit' });
+const f = (iso) => iso ? fmt.format(new Date(iso)) : '-';
+const STATUSES = ['새 문의', '연락함', '완료'];
+let rows = [], filter = '새 문의';
+
+const getPw = () => { try { return sessionStorage.getItem('admin_pw') || ''; } catch { return ''; } };
+const setPw = (v) => { try { v ? sessionStorage.setItem('admin_pw', v) : sessionStorage.removeItem('admin_pw'); } catch {} };
+
+async function api(view, method = 'GET', body) {
+  const r = await fetch('/api/admin?view=' + view, {
+    method, headers: { 'x-admin-password': getPw(), 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401) { showLogin('비밀번호가 맞지 않아요.'); throw new Error('401'); }
+  if (!r.ok) { showErr(d.error || '문제가 생겼어요.'); throw new Error(d.error); }
+  document.getElementById('appErr').hidden = true;
+  return d;
+}
+function showErr(t) { const e = document.getElementById('appErr'); e.textContent = t; e.hidden = false; }
+function showLogin(err) {
+  setPw(''); document.getElementById('app').hidden = true; document.getElementById('loginBox').hidden = false;
+  const e = document.getElementById('loginErr'); e.hidden = !err; e.textContent = err || '';
+  const pw = document.getElementById('pw'); pw.value = ''; pw.focus();
+}
+const el = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text !== undefined) x.textContent = text; return x; };
+
+// ── 예약함 ──
+async function loadInq() {
+  rows = (await api('inquiries')).rows;
+  const now = Date.now();
+  const isLate = (r) => r.status === '새 문의' && now - new Date(r.created_at) > 48 * 3600e3;
+  document.getElementById('newCount').textContent = rows.filter((r) => r.status === '새 문의').length;
+  document.getElementById('lateCount').textContent = rows.filter(isLate).length;
+  const list = document.getElementById('inqList'); list.innerHTML = '';
+  const shown = rows.filter((r) => !filter || r.status === filter);
+  if (!shown.length) list.appendChild(el('p', 'note', '여기엔 아직 예약이 없어요.'));
+  shown.forEach((r) => {
+    const c = el('div', 'card' + (isLate(r) ? ' late' : ''));
+    const w = el('div', 'when', r.slots ? f(r.slots.starts_at) : '시간 없음');
+    const tag = el('span', 'tag' + (r.confirmed ? '' : ' off'), r.confirmed ? '확정' : '확정 취소됨'); w.appendChild(tag);
+    c.appendChild(w);
+    c.appendChild(el('div', '', `${r.name} · 만들고 싶은 것: ${r.message || '-'}`));
+    const cb = el('button', 'contact', r.contact); cb.type = 'button';
+    cb.onclick = async () => { try { await navigator.clipboard.writeText(r.contact); cb.textContent = r.contact + ' (복사됨)'; } catch { const s = getSelection(); const rg = document.createRange(); rg.selectNodeContents(cb); s.removeAllRanges(); s.addRange(rg); } };
+    c.appendChild(cb);
+    c.appendChild(el('div', 'meta', '신청: ' + f(r.created_at)));
+    const st = el('div', 'status');
+    STATUSES.forEach((s) => {
+      const b = el('button', '', s); b.type = 'button'; b.setAttribute('aria-pressed', r.status === s ? 'true' : 'false');
+      b.onclick = async () => { await api('inquiries', 'PATCH', { id: r.id, status: s }); loadInq(); };
+      st.appendChild(b);
+    });
+    c.appendChild(st);
+    const cancel = el('button', 'link', r.confirmed ? '확정 취소 (자리 다시 열기)' : '다시 확정하기'); cancel.type = 'button';
+    cancel.onclick = async () => {
+      if (r.confirmed && !confirm(`${r.name}님 예약 확정을 취소할까요? 그 자리는 다른 손님이 예약할 수 있게 돼요.`)) return;
+      await api('inquiries', 'PATCH', { id: r.id, confirmed: !r.confirmed }); loadInq();
+    };
+    c.appendChild(cancel);
+    list.appendChild(c);
+  });
+}
+document.getElementById('filters').onclick = (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  filter = b.dataset.f;
+  document.querySelectorAll('#filters button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+  loadInq().catch(() => {});
+};
+
+// ── 수업 시간 ──
+async function loadSlots() {
+  const d = await api('slots');
+  const list = document.getElementById('slotList'); list.innerHTML = '';
+  if (!d.rows.length) list.appendChild(el('p', 'note', '열린 수업 시간이 없어요. 위에서 열어 주세요.'));
+  d.rows.forEach((s) => {
+    const c = el('div', 'card');
+    const w = el('div', 'when', f(s.starts_at));
+    w.appendChild(el('span', 'tag' + (s.is_open ? '' : ' off'), s.is_open ? '열림' : '닫힘'));
+    c.appendChild(w);
+    c.appendChild(el('div', '', `예약 ${s.booked}팀 / ${s.capacity}팀`));
+    const b = el('button', 'btn', s.is_open ? '이 시간 닫기' : '다시 열기'); b.type = 'button'; b.style.marginTop = '8px';
+    b.onclick = async () => { await api('slots', 'PATCH', { id: s.id, is_open: !s.is_open }); loadSlots(); };
+    c.appendChild(b);
+    list.appendChild(c);
+  });
+}
+document.getElementById('slotForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const v = document.getElementById('slotAt').value; const cap = Number(document.getElementById('slotCap').value);
+  if (!v) return showErr('날짜와 시간을 골라 주세요.');
+  try {
+    await api('slots', 'POST', { starts_at: v + ':00+09:00', capacity: cap });
+    e.target.reset(); loadSlots();
+  } catch {}
+};
+
+// ── 회원 ──
+async function loadMembers() {
+  const d = await api('members');
+  document.getElementById('memCount').textContent = d.rows.length;
+  const list = document.getElementById('memList'); list.innerHTML = '';
+  d.rows.forEach((m) => {
+    const c = el('div', 'card');
+    c.appendChild(el('div', 'when', m.email));
+    c.appendChild(el('div', 'meta', `가입: ${f(m.created_at)} · 마지막 로그인: ${f(m.last_sign_in_at)}`));
+    list.appendChild(c);
+  });
+}
+
+// ── 탭 ──
+const loaders = { inq: loadInq, slots: loadSlots, members: loadMembers };
+document.querySelector('.tabs').onclick = (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('.tabs button').forEach((x) => x.setAttribute('aria-selected', x === b ? 'true' : 'false'));
+  Object.keys(loaders).forEach((k) => { document.getElementById('tab-' + k).hidden = k !== b.dataset.tab; });
+  loaders[b.dataset.tab]().catch(() => {});
+};
+
+// ── 로그인 ──
+document.getElementById('loginBox').onsubmit = async (e) => {
+  e.preventDefault();
+  setPw(document.getElementById('pw').value);
+  try {
+    await loadInq();
+    document.getElementById('loginBox').hidden = true; document.getElementById('app').hidden = false;
+  } catch (err) {
+    if (err.message !== '401') { const le = document.getElementById('loginErr'); le.textContent = err.message || '문제가 생겼어요.'; le.hidden = false; }
+  }
+};
+document.getElementById('logout').onclick = () => showLogin();
+if (getPw()) loadInq().then(() => { document.getElementById('loginBox').hidden = true; document.getElementById('app').hidden = false; }).catch(() => {});
+</script>
+</body>
+</html>

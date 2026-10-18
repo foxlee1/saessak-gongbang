@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>회원가입 · 새싹 공방</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="wrap top"><a class="logo" href="/">🌱 새싹 공방</a></header>
+<main class="wrap">
+  <form class="card narrow" id="f" novalidate>
+    <h1>회원가입</h1>
+    <p class="sec-sub" style="margin-bottom:20px">이메일과 비밀번호만 있으면 돼요.</p>
+    <div class="field"><label class="lbl" for="email">이메일</label><input type="email" id="email" autocomplete="email" required></div>
+    <div class="field"><label class="lbl" for="pw">비밀번호 (8자 이상)</label><input type="password" id="pw" autocomplete="new-password" minlength="8" required></div>
+    <div class="field">
+      <label class="consent"><input type="checkbox" id="consent">
+        <span>(필수) 회원 관리를 위해 이메일을 받고, 탈퇴하면 지워요. <a href="/privacy.html">개인정보 처리방침</a></span></label>
+    </div>
+    <button class="btn" style="width:100%" type="submit" id="btn">가입하기</button>
+    <div class="msg" id="m" hidden role="status"></div>
+    <div class="links"><a href="/login.html">이미 회원이에요 → 로그인</a></div>
+  </form>
+</main>
+<script src="auth.js"></script>
+<script>
+document.getElementById('f').onsubmit = async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim(), password = document.getElementById('pw').value;
+  if (!email || !email.includes('@')) return say('m', '이메일을 확인해 주세요.');
+  if (password.length < 8) return say('m', '비밀번호는 8자 이상으로 정해 주세요.');
+  if (!document.getElementById('consent').checked) return say('m', '개인정보 수집·이용에 동의해 주세요.');
+  const btn = document.getElementById('btn'); btn.disabled = true;
+  try {
+    const r = await Auth.call('signup', { email, password, data: { consent: true, consent_at: new Date().toISOString() } });
+    if (!r.ok) return say('m', r.status === 429 ? '잠시 뒤 다시 시도해 주세요.' : '가입하지 못했어요. 이미 가입한 이메일인지 확인해 주세요.');
+    if (r.data.access_token) { Auth.save(r.data.access_token); location.href = '/members.html'; return; }
+    say('m', '확인 메일을 보냈어요. 메일의 링크를 누른 뒤 로그인해 주세요.', true);
+  } catch (err) { say('m', err.message); }
+  finally { btn.disabled = false; }
+};
+</script>
+</body>
+</html>

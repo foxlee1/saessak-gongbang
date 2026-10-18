@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>내 공간 · 새싹 공방</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="wrap top"><a class="logo" href="/">🌱 새싹 공방</a></header>
+<main class="wrap">
+  <div class="card narrow">
+    <h1>내 공간</h1>
+    <p id="who" class="sec-sub">불러오는 중…</p>
+    <p id="content"></p>
+    <div class="links">
+      <a class="btn small" href="/#book">수업 예약하기</a>
+      <button class="btn ghost small" id="out" type="button">로그아웃</button>
+    </div>
+  </div>
+</main>
+<script src="auth.js"></script>
+<script>
+(async () => {
+  const t = Auth.token();
+  if (!t) { location.replace('/login.html'); return; }
+  const r = await fetch('/api/members', { headers: { Authorization: 'Bearer ' + t }, cache: 'no-store' });
+  if (r.status === 401) { Auth.save(''); location.replace('/login.html'); return; }
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { document.getElementById('who').textContent = d.error || '불러오지 못했어요.'; return; }
+  document.getElementById('who').textContent = d.email + ' 님, 반가워요!';
+  document.getElementById('content').textContent = d.content;
+})();
+document.getElementById('out').onclick = async () => {
+  const t = Auth.token();
+  try { if (t) await Auth.call('logout', {}, t); } catch {}
+  Auth.save(''); location.href = '/';
+};
+</script>
+</body>
+</html>
